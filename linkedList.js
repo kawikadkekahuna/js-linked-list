@@ -58,16 +58,21 @@
 
 		function _get(index){
 			var counter = 1;
-			var returnObj = object.head;		
-			var plusOne = object.head.next;
-
+			var returnObj = object.head;
+            var plusOne;
+            if(object.head.next !== undefined){
+			plusOne = object.head.next;
+            }else{
+              return false;
+            }
+            
 			if(index === 1){
 				return plusOne;
 			}
 
 			if(index >= 2){
 				while(counter != index){
-					if(plusOne.next !== null){
+					if(plusOne.next !== undefined){
 						returnObj = plusOne.next;
 						plusOne = returnObj;
 					}else{
@@ -85,40 +90,58 @@
 		}
 
 		function _remove(index){
+		var toRemove;
 
-		var removed = _get(index);
-		
-
-
-		if(_getTail() === _get(index)){
-
-			object.tail = _get(index - 1);
-
+		if(_get(index) !== undefined){ //if undefined return false
+		toRemove = _get(index);
+		}else{
+			toRemove = false;
 		}
 
-		if(index === 0){
+		if(toRemove === _getTail()){ //checks if removable value is tail;
+			_get(index - 1).next = null;
+			object.tail = _get(index-1);
+		}
 
+		if(toRemove === _getHead()){
 			object.head = object.head.next;
 		}
 
-		var previous = _get(index - 1);
-		var current = _get(index);
-		var upOne = _get(index + 1);
-
-		previous.next = upOne;
-
-		return removed;
+		_get(index - 1).next = _get(index + 1);
 
 
-
+		return toRemove;
 		}
 
-		function _insert(){
+		function _insert(value, index){
+
+
+			var bridge = _get(index);// obj to link to new node
+
+			var node = {
+				value : value,
+				next : null
+			};
+
+			if(index < 0){
+				return false;
+			}
+			if(index === 0){ // Reassigns head
+			object.head = node;
+			node.next = bridge;
+			return;
+			}
+			if(_get(index + 1) === false){
+			object.tail = node;
+			_get(index).next = node;
+			}
+
+			_get(index - 1).next = node;
+			node.next = bridge; 
+			
+
 
 
 			}
 		
 	  }	
-
-
-
